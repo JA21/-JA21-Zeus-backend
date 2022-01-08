@@ -1,18 +1,35 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import {ConfigService} from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
+import { Logger } from '@nestjs/common';
 import { ValidationPipe } from '@nestjs/common';
+
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     cors: true,
     bodyParser: true,
   });
+  
+  await app.init();
 
- /*  const config = app.get(ConfigService); */
+  const config = app.get(ConfigService);
 
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(8500);
+  await app.listen(config.get<number>('app.port'), () => {
+    Logger.log(
+      `🔥  App Name : ${config.get<string>('app.name')} 🔥`,
+      'Logger-App-Name',
+    );
+    Logger.log(
+      `🎓  Mode : ${config.get<string>('app.env')} 🎓`,
+      'Logger-App-Mode',
+    );
+    Logger.log(
+      `🚀  Server Running on ${config.get<string>('app.host')}:${config.get<number>('app.port')} 🚀 `,
+      'Logger-Server-Running',
+    );
+  });
 }
 bootstrap();

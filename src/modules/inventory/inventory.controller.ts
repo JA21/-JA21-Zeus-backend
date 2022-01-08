@@ -45,8 +45,9 @@ export class InventoryController {
 
 
   @Put('/update')
-  async updateIventory(@Res() res, @Body() body: CreateInvetoryDto, @Param('id') id: string) {
+  async updateIventory(@Res() res, @Body() body: CreateInvetoryDto, @Query('id') id: string) {
     const respond = await this.iventoryService.updateInvetory(id, body);
+    if (!respond) throw new NotFoundException('Iventory does not exists')
     return res.status(HttpStatus.OK).json({
       message: 'Inventory succesfully update',
       respond
