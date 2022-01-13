@@ -6,7 +6,7 @@ import { User } from './interfaces/user.interface';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel('user') private readonly userModel: Model<User>) { }
+  constructor(@InjectModel('User') private readonly userModel: Model<User>) { }
 
   async getAllUser(): Promise<User[]> {
     const user = await this.userModel.find();
